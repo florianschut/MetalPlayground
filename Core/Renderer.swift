@@ -8,6 +8,7 @@
 import Metal
 import MetalKit
 import simd
+import ModelIO
 
 
 let alignedUniformsSize = (MemoryLayout<Uniforms>.size + 0xff) & -0x100
@@ -60,7 +61,7 @@ class Renderer: NSObject, MTKViewDelegate
         metalKitView.colorPixelFormat = MTLPixelFormat.bgra8Unorm_srgb
         metalKitView.sampleCount = 1
         
-        let mtlVertexDescriptor = Renderer.buildMetalVertexDescriptor()
+        let mtlVertexDescriptor = Renderer.buildMetalVertexDescriptorForFile()
         
         do{
             pipelineState = try Renderer.buildRenderPipelineWithDevice(device: device, metalKitView: metalKitView, mtlVertexDescriptor: mtlVertexDescriptor)
@@ -76,14 +77,14 @@ class Renderer: NSObject, MTKViewDelegate
         depthState = state
         
         do{
-            mesh = try Renderer.buildMesh(device: device, mtlVertexDescriptor: mtlVertexDescriptor)
+            mesh = try Renderer.buildMeshFromFile(device: device, mtlVertexDescriptor: mtlVertexDescriptor)
         } catch {
             print("Unable to build MetalKit Mesh. Error info: \(error)")
             return nil
         }
         
         do {
-            colorMap = try Renderer.LoadTexture(device: device, textureName: "Niels")
+            colorMap = try Renderer.LoadTexture(device: device, textureName: "T_CNS2092_Elora_C.png")
         } catch {
             print("Unable to load texture. Error info: \(error)")
             return nil
@@ -108,6 +109,37 @@ class Renderer: NSObject, MTKViewDelegate
         mtlVertexDescriptor.layouts[BufferIndex.meshPositions.rawValue].stepRate = 1
         mtlVertexDescriptor.layouts[BufferIndex.meshPositions.rawValue].stepFunction = MTLVertexStepFunction.perVertex
         
+        mtlVertexDescriptor.layouts[BufferIndex.meshGenerics.rawValue].stride = 8
+        mtlVertexDescriptor.layouts[BufferIndex.meshGenerics.rawValue].stepRate = 1
+        mtlVertexDescriptor.layouts[BufferIndex.meshGenerics.rawValue].stepFunction = MTLVertexStepFunction.perVertex
+        
+        return mtlVertexDescriptor
+    }
+    
+    class func buildMetalVertexDescriptorForFile() -> MTLVertexDescriptor{
+        
+        let mtlVertexDescriptor = MTLVertexDescriptor()
+        
+        mtlVertexDescriptor.attributes[VertexAttribute.position.rawValue].format = MTLVertexFormat.float3
+        mtlVertexDescriptor.attributes[VertexAttribute.position.rawValue].offset = 0
+        mtlVertexDescriptor.attributes[VertexAttribute.position.rawValue].bufferIndex = BufferIndex.meshPositions.rawValue
+        
+        mtlVertexDescriptor.attributes[VertexAttribute.normal.rawValue].format = MTLVertexFormat.float3
+        mtlVertexDescriptor.attributes[VertexAttribute.normal.rawValue].offset = 0
+        mtlVertexDescriptor.attributes[VertexAttribute.normal.rawValue].bufferIndex = BufferIndex.meshNormals.rawValue
+        
+        mtlVertexDescriptor.attributes[VertexAttribute.texcoord.rawValue].format = MTLVertexFormat.float2
+        mtlVertexDescriptor.attributes[VertexAttribute.texcoord.rawValue].offset = 0
+        mtlVertexDescriptor.attributes[VertexAttribute.texcoord.rawValue].bufferIndex = BufferIndex.meshGenerics.rawValue
+        
+        mtlVertexDescriptor.layouts[BufferIndex.meshPositions.rawValue].stride = 12
+        mtlVertexDescriptor.layouts[BufferIndex.meshPositions.rawValue].stepRate = 1
+        mtlVertexDescriptor.layouts[BufferIndex.meshPositions.rawValue].stepFunction = MTLVertexStepFunction.perVertex
+        
+        mtlVertexDescriptor.layouts[BufferIndex.meshNormals.rawValue].stride = 12
+        mtlVertexDescriptor.layouts[BufferIndex.meshNormals.rawValue].stepRate = 1
+        mtlVertexDescriptor.layouts[BufferIndex.meshNormals.rawValue].stepFunction = MTLVertexStepFunction.perVertex
+
         mtlVertexDescriptor.layouts[BufferIndex.meshGenerics.rawValue].stride = 8
         mtlVertexDescriptor.layouts[BufferIndex.meshGenerics.rawValue].stepRate = 1
         mtlVertexDescriptor.layouts[BufferIndex.meshGenerics.rawValue].stepFunction = MTLVertexStepFunction.perVertex
@@ -160,6 +192,29 @@ class Renderer: NSObject, MTKViewDelegate
         return try MTKMesh(mesh:mdlMesh, device: device)
     }
     
+    class func buildMeshFromFile(device: MTLDevice, mtlVertexDescriptor: MTLVertexDescriptor) throws -> MTKMesh{
+        let metalAllocator = MTKMeshBufferAllocator(device: device)
+
+        let modelUrl = Bundle.main.url(forResource: "Elora", withExtension: "obj")
+        
+        let mdlVertexDescriptor = MTKModelIOVertexDescriptorFromMetal(mtlVertexDescriptor)
+
+        guard let attributes = mdlVertexDescriptor.attributes as? [MDLVertexAttribute] else{
+            throw RendererError.badVertexDescriptor
+        }
+
+        attributes[VertexAttribute.position.rawValue].name = MDLVertexAttributePosition
+        attributes[VertexAttribute.texcoord.rawValue].name = MDLVertexAttributeTextureCoordinate
+        attributes[VertexAttribute.normal.rawValue].name = MDLVertexAttributeNormal
+
+        let asset = MDLAsset(url: modelUrl, vertexDescriptor: mdlVertexDescriptor, bufferAllocator: metalAllocator)
+
+        let meshes = try MTKMesh.newMeshes(asset: asset, device: device)
+        let mesh = (meshes.metalKitMeshes.first)!
+        //TODO: not quite robust, should work for simple models for now
+        return mesh
+    }
+    
     class func LoadTexture(device: MTLDevice, textureName: String) throws -> MTLTexture {
         let textureLoader = MTKTextureLoader(device: device)
         
@@ -167,7 +222,9 @@ class Renderer: NSObject, MTKViewDelegate
             MTKTextureLoader.Option.textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue),
             MTKTextureLoader.Option.textureStorageMode: NSNumber(value: MTLStorageMode.private.rawValue)
         ]
-        return try textureLoader.newTexture(name: textureName, scaleFactor: 1.0, bundle: nil, options: textureLoaderOptions)
+
+        let textureURL = Bundle.main.url(forResource: "T_CNS2092_Elora_C", withExtension:"png" );
+        return try textureLoader.newTexture(URL: textureURL!, options: textureLoaderOptions)
     }
 
     private func updateDynamicBufferState(){
@@ -182,9 +239,9 @@ class Renderer: NSObject, MTKViewDelegate
     private func updateGameState(){
         uniforms[0].projectionMatrix = projectionMatrix
         
-        let rotationAxis = SIMD3<Float>(1,1,0)
+        let rotationAxis = SIMD3<Float>(0,1,0)
         let modelMatrix = matrix4x4_rotation(radians: rotation, axis: rotationAxis)
-        let viewMatrix = matrix4x4_translation(0.0, 0.0, -8.0)
+        let viewMatrix = matrix4x4_translation(0.0, -50.0, -128.0)
         uniforms[0].modelViewMatrix = simd_mul( viewMatrix, modelMatrix)
         rotation += 0.01
     }
@@ -253,7 +310,7 @@ class Renderer: NSObject, MTKViewDelegate
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         let aspect = Float(size.width) / Float(size.height)
-        projectionMatrix = matrix_perspective_right_hand(fovyRadians: radians_from_degrees(65), aspectRatio: aspect, nearZ: 0.1, farZ: 100.0)
+        projectionMatrix = matrix_perspective_right_hand(fovyRadians: radians_from_degrees(65), aspectRatio: aspect, nearZ: 1.0, farZ: 1000.0)
     }
 }
 

@@ -15,12 +15,14 @@ using namespace metal;
 typedef struct
 {
     float3 position [[attribute(VertexAttributePosition)]];
-    float2 texcoord [[attribute(VertexAttributeTexcoord)]];
+    float3 normal [[attribute(VertexAttributeNormal)]];
+    float2 texCoord [[attribute(VertexAttributeTexcoord)]];
 } Vertex;
 
 typedef struct
 {
     float4 position [[position]];
+    float3 normal;
     float2 texCoord;
 } ColorInOut;
 
@@ -32,7 +34,8 @@ vertex ColorInOut vertexShader(Vertex in [[stage_in]],
     
     float4 position = float4(in.position, 1.0);
     out.position = uniforms.projectionMatrix * uniforms.modelViewMatrix * position;
-    out.texCoord = in.texcoord;
+    out.normal = in.normal;
+    out.texCoord = float2(in.texCoord.x, -in.texCoord.y);
     
     return out;
 }

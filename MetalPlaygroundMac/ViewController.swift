@@ -7,6 +7,7 @@
 
 import Cocoa
 import MetalKit
+import ModelIO
 
 class ViewController: NSViewController {
 
