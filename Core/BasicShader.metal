@@ -35,7 +35,7 @@ vertex ColorInOut vertexShader(Vertex in [[stage_in]],
     float4 position = float4(in.position, 1.0);
     out.position = uniforms.projectionMatrix * uniforms.modelViewMatrix * position;
     out.normal = in.normal;
-    out.texCoord = float2(in.texCoord.x, -in.texCoord.y);
+    out.texCoord = float2(in.texCoord.x, -in.texCoord.y + 1);
     
     return out;
 }

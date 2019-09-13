@@ -38,7 +38,7 @@ class Renderer: NSObject, MTKViewDelegate
 
     var projectionMatrix: matrix_float4x4 = matrix_float4x4()
 
-    var rotation: Float = 0
+    var rotation: Float = 0.2
 
     var mesh: MTKMesh
 
@@ -195,7 +195,7 @@ class Renderer: NSObject, MTKViewDelegate
     class func buildMeshFromFile(device: MTLDevice, mtlVertexDescriptor: MTLVertexDescriptor) throws -> MTKMesh{
         let metalAllocator = MTKMeshBufferAllocator(device: device)
 
-        let modelUrl = Bundle.main.url(forResource: "Elora", withExtension: "obj")
+        let modelUrl = Bundle.main.url(forResource: "model", withExtension: "obj")
         
         let mdlVertexDescriptor = MTKModelIOVertexDescriptorFromMetal(mtlVertexDescriptor)
 
@@ -223,7 +223,7 @@ class Renderer: NSObject, MTKViewDelegate
             MTKTextureLoader.Option.textureStorageMode: NSNumber(value: MTLStorageMode.private.rawValue)
         ]
 
-        let textureURL = Bundle.main.url(forResource: "T_CNS2092_Elora_C", withExtension:"png" );
+        let textureURL = Bundle.main.url(forResource: "tex_u1_v1", withExtension:"jpg" );
         return try textureLoader.newTexture(URL: textureURL!, options: textureLoaderOptions)
     }
 
@@ -241,9 +241,9 @@ class Renderer: NSObject, MTKViewDelegate
         
         let rotationAxis = SIMD3<Float>(0,1,0)
         let modelMatrix = matrix4x4_rotation(radians: rotation, axis: rotationAxis)
-        let viewMatrix = matrix4x4_translation(0.0, -50.0, -128.0)
+        let viewMatrix = matrix4x4_translation(0.0, -25.0, -58.0)
         uniforms[0].modelViewMatrix = simd_mul( viewMatrix, modelMatrix)
-        rotation += 0.01
+        //rotation += 0.01
     }
     
     func draw(in view: MTKView) {
