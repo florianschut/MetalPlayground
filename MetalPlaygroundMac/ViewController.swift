@@ -10,8 +10,8 @@ import MetalKit
 import ModelIO
 
 class ViewController: NSViewController {
-
-    var renderer: Renderer!
+    
+    var littlePlayground: LittlePlayground!
     var mtkView: MTKView!
     
     override func viewDidLoad() {
@@ -29,18 +29,14 @@ class ViewController: NSViewController {
         
         mtkView.device = defaultDevice
         
-        guard let newRenderer = Renderer(metalKitView: mtkView) else {
-            print("Renderer could not be initialized")
+        guard let ourPlayground = LittlePlayground(metalKitView: mtkView) else {
+            print("We are not going to the playground today")
             return
         }
+        littlePlayground = ourPlayground
         
-        renderer = newRenderer
-        
-        renderer.mtkView(mtkView, drawableSizeWillChange: mtkView.drawableSize)
-        
-        mtkView.delegate = renderer
     }
-
+  
     override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.
