@@ -28,6 +28,7 @@ class Renderer: NSObject, MTKViewDelegate
     var depthState: MTLDepthStencilState
     let mtlVertexDescriptor: MTLVertexDescriptor
     var pgModels: [PGModel] = []
+    var cubeModel: PGModel;
     
     var roatationVector: vector_float4 = vector_float4()
     
@@ -41,7 +42,8 @@ class Renderer: NSObject, MTKViewDelegate
 
     var projectionMatrix: matrix_float4x4 = matrix_float4x4()
 
-    var rotation: Float = 0.2
+    var rotation: Float = 0.5//.5 * Float.pi
+    var pointLight = Light(position: vector_float4(-2.0, 1.0, 2.0, 1), color: vector_float4(1.0,1.0,1.0,1.0))
 
     init?(metalKitView: MTKView)
     {
@@ -76,6 +78,9 @@ class Renderer: NSObject, MTKViewDelegate
         depthStateDescriptor.isDepthWriteEnabled = true
         guard let state = device.makeDepthStencilState(descriptor: depthStateDescriptor) else {return nil}
         depthState = state
+        
+        cubeModel = PGModel()
+        cubeModel.buildDebugCube(dimensions: vector_float3(0.25,0.25,0.25), device: self.device, mtlVertexDescriptor: mtlVertexDescriptor)
         
         super.init()
         
@@ -148,20 +153,28 @@ class Renderer: NSObject, MTKViewDelegate
         
         uniforms = UnsafeMutableRawPointer(dynamicUniformBuffer.contents() + uniformBufferOffset).bindMemory(to: Uniforms.self, capacity: 1)
     }
-    var translation = vector_float3()
+    var lightRotation:Float = 0.0
+    
     //TODO: Doesn't have anything to do with renderer
     private func updateGameState(){
         uniforms[0].projectionMatrix = projectionMatrix
         
         let rotationAxis = SIMD3<Float>(0,1,0)
-       // let modelMatrix = matrix4x4_rotation(radians: rotation, axis: rotationAxis)
-        let modelMatrix = matrix4x4_translation(self.translation.x, self.translation.y, self.translation.z)
-        let viewMatrix = matrix4x4_translation(0.0, 0.0, -2.0)
+        let modelMatrix = matrix4x4_rotation(radians: rotation, axis: rotationAxis)
+        //let cameraRotation = matrix4x4_rotation(radians: radians_from_degrees(33), axis: rotationAxis)
+       // let modelMatrix = matrix4x4_translation(self.translation.x, self.translation.y, self.translation.z)
+        let viewTransform = matrix4x4_translation(0.0, 0.0, 2.5)
+        //viewTransform *= cameraRotation
         uniforms[0].modelMatrix = modelMatrix
-        uniforms[0].viewMatrix = viewMatrix
-        self.rotation += 0.005
-        self.translation += vector_float3(0.00, 0.00, 0.001)
+        let lightRotationMatrix = matrix4x4_rotation(radians: lightRotation, axis: rotationAxis)
         
+        uniforms[0].viewMatrix = simd_inverse(viewTransform)
+        self.pointLight.position = lightRotationMatrix * vector_float4(0,0,11,1)
+        uniforms[0].lights = self.pointLight
+        lightRotation += 0.015
+        //self.rotation += 0.005
+       // self.translation += vector_float3(0.00, 0.00, 0.00)
+       
     }
     
     func draw(in view: MTKView) {
@@ -198,7 +211,7 @@ class Renderer: NSObject, MTKViewDelegate
                 renderEncoder.setFragmentBuffer(dynamicUniformBuffer, offset: uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
                 for model in self.pgModels {
                     //TODO: Add logic for multiple textures and no textures
-//                    renderEncoder.setFragmentTexture(model.colorMaps[0], index: TextureIndex.color.rawValue)
+                    renderEncoder.setFragmentTexture(model.colorMaps[0], index: TextureIndex.color.rawValue)
                     
                     //TODO: Read up on this stuff
                     for mesh in model.meshes {
@@ -217,6 +230,7 @@ class Renderer: NSObject, MTKViewDelegate
                         }
                     }
                 }
+                //renderEncoder.drawIndexedPrimitives(type: , indexCount: <#T##Int#>, indexType: <#T##MTLIndexType#>, indexBuffer: <#T##MTLBuffer#>, indexBufferOffset: <#T##Int#>)
                 
                 renderEncoder.popDebugGroup()
                 

@@ -47,5 +47,26 @@ class PGModel{
         self.colorMaps.append(try textureLoader.newTexture(URL: url, options: textureLoaderOptions))
     }
     
+    func buildDebugCube(dimensions: vector_float3,device: MTLDevice, mtlVertexDescriptor: MTLVertexDescriptor) throws{
+        let metalAllocator = MTKMeshBufferAllocator(device: device)
+        
+        let cubeMesh = MDLMesh.newBox(withDimensions: dimensions, segments: vector_uint3(2,2,2), geometryType: .triangles, inwardNormals: false, allocator: metalAllocator)
+        
+        let mdlVertexDescriptor = MTKModelIOVertexDescriptorFromMetal(mtlVertexDescriptor)
+        
+        guard let attributes = mdlVertexDescriptor.attributes as? [MDLVertexAttribute] else{
+            print("Bad vertex descriptor when creating debug box")
+            throw RendererError.badVertexDescriptor
+        }
+
+        attributes[VertexAttribute.position.rawValue].name = MDLVertexAttributePosition
+        attributes[VertexAttribute.texcoord.rawValue].name = MDLVertexAttributeTextureCoordinate
+        attributes[VertexAttribute.normal.rawValue].name = MDLVertexAttributeNormal
+        
+        cubeMesh.vertexDescriptor = mdlVertexDescriptor
+        
+        try self.meshes.append(MTKMesh(mesh: cubeMesh, device: device))
+    }
+    
     
 }

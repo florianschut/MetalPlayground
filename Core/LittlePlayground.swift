@@ -51,7 +51,7 @@ class LittlePlayground {
             self.renderer.pgModels.append(helmetModel)
         }
         
-        do {
+        if(false) {
             let dragonModel = PGModel()
             let modelUrl = Bundle.main.url(forResource: "dragon", withExtension: "obj")
             do{
@@ -60,6 +60,40 @@ class LittlePlayground {
                 print("Unable to build MetalKit Mesh. Error info: \(error)")
             }
             self.renderer.pgModels.append(dragonModel)
+        }
+        if(false){
+            let model = PGModel()
+            let modelUrl = Bundle.main.url(forResource: "craneo", withExtension: "OBJ")
+            do{
+                try model.buildMeshFromFile(url: modelUrl, device: metalKitView.device!, mtlVertexDescriptor: renderer.mtlVertexDescriptor)
+            }catch{
+                print("Unable to build MetalKit Mesh. Error info: \(error)")
+            }
+            
+            let textureUrl = Bundle.main.url(forResource: "difuso_flip_oscuro_5", withExtension: "jpg")
+            do {
+                try model.LoadTexture(url: textureUrl, device: metalKitView.device!, textureName: "difuso_flip_oscuro_5.jpg")
+            } catch {
+                print("Unable to load texture. Error info: \(error)")
+            }
+            self.renderer.pgModels.append(model)
+        }
+        do{
+            let model = PGModel()
+            do{
+                try model.buildDebugCube(dimensions: vector_float3(1,1,1), device: metalKitView.device!, mtlVertexDescriptor: renderer.mtlVertexDescriptor)
+            }catch{
+                print("Unable to build MetalKit Mesh. Error info: \(error)")
+            }
+            
+            let textureUrl = Bundle.main.url(forResource: "difuso_flip_oscuro_5", withExtension: "jpg")
+            do {
+                try model.LoadTexture(url: textureUrl, device: metalKitView.device!, textureName: "difuso_flip_oscuro_5.jpg")
+            } catch {
+                print("Unable to load texture. Error info: \(error)")
+            }
+            
+            self.renderer.pgModels.append(model)
         }
     }
     

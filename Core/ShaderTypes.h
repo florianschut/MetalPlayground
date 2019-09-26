@@ -40,12 +40,19 @@ typedef NS_ENUM(NSInteger, TextureIndex)
     TextureIndexColor    = 0,
 };
 
+typedef struct{
+    vector_float4 position;
+    vector_float4 color;
+} Light;
+
 typedef struct
 {
     matrix_float4x4 projectionMatrix;
     matrix_float4x4 viewMatrix;
     matrix_float4x4 modelMatrix;
+    Light lights;
 } Uniforms;
+
 
 #endif /* ShaderTypes_h */
 
