@@ -11,7 +11,9 @@ import simd
 import ModelIO
 
 
-let alignedUniformsSize = (MemoryLayout<Uniforms>.size + 0xff) & -0x100
+let alignedSharedUniformsSize = (MemoryLayout<SharedUniforms>.size + 0xff) & -0x100
+let alignedObjectUniformsSize = (MemoryLayout<ObjectUniforms>.size + 0xff) & -0x100
+let numObjectUniforms = 4
 
 let maxBuffersInFlight = 3
 
@@ -23,11 +25,14 @@ class Renderer: NSObject, MTKViewDelegate
 {
     public let device: MTLDevice
     let commandQueue: MTLCommandQueue
-    var dynamicUniformBuffer: MTLBuffer
+    var dynamicSharedUniformBuffer: MTLBuffer
+    var dynamicObjectUniformBuffer: MTLBuffer
     var pipelineState: MTLRenderPipelineState
     var depthState: MTLDepthStencilState
     let mtlVertexDescriptor: MTLVertexDescriptor
     var pgModels: [PGModel] = []
+    var lights: [Light] = [Light(position: vector_float4(-2.0, 1.0, 2.0, 1), color: vector_float4(1.0,1.0,1.0,1.0)),
+                           Light(position: vector_float4(2.0, 1.0, 2.0, 1), color: vector_float4(0.0,1.0,0.0,1.0)) ]
     var cubeModel: PGModel;
     
     var roatationVector: vector_float4 = vector_float4()
@@ -38,27 +43,32 @@ class Renderer: NSObject, MTKViewDelegate
 
     var uniformBufferIndex = 0
 
-    var uniforms: UnsafeMutablePointer<Uniforms>
-
+    var sharedUniforms: UnsafeMutablePointer<SharedUniforms>
+    var objectUniforms: UnsafeMutablePointer<ObjectUniforms>
+    
     var projectionMatrix: matrix_float4x4 = matrix_float4x4()
 
     var rotation: Float = 0.5//.5 * Float.pi
-    var pointLight = Light(position: vector_float4(-2.0, 1.0, 2.0, 1), color: vector_float4(1.0,1.0,1.0,1.0))
-
+    
     init?(metalKitView: MTKView)
     {
         self.device = metalKitView.device!
         guard let queue = self.device.makeCommandQueue() else {return nil}
         self.commandQueue = queue
 
-        let uniformBufferSize = alignedUniformsSize * maxBuffersInFlight
+        let sharedUniformBufferSize = alignedSharedUniformsSize * maxBuffersInFlight
+        let objectUniformBufferSize = alignedObjectUniformsSize * maxBuffersInFlight * numObjectUniforms
         
-        guard let buffer = self.device.makeBuffer(length: uniformBufferSize, options: [MTLResourceOptions.storageModeShared]) else {return nil}
-        dynamicUniformBuffer = buffer
+        guard let sharedBuffer = self.device.makeBuffer(length: uniformBufferSize, options: [.storageModeShared]) else {return nil}
+        dynamicSharedUniformBuffer = sharedBuffer
+        self.dynamicSharedUniformBuffer.label = "SharedUniformBuffer"
         
-        self.dynamicUniformBuffer.label = "UniformBuffer"
+        guard let objectBuffer = self.device.makeBuffer(length: sharedUniformBufferSize, options: [.storageModeShared]) else {return nil}
+        dynamicObjectUniformBuffer = objectBuffer
+        self.dynamicObjectUniformBuffer.label = "ObjectUniformBuffer"
         
-        uniforms = UnsafeMutableRawPointer(dynamicUniformBuffer.contents()).bindMemory(to: Uniforms.self, capacity: 1)
+        sharedUniforms = UnsafeMutableRawPointer(dynamicSharedUniformBuffer.contents()).bindMemory(to: SharedUniforms.self, capacity: 1)
+        ObjectUniforms = UnsafeMutableRawPointer(dynamicObjectUniformBuffer.contents()).bindMemory(to: ObjectUniforms.self, capacity: <#T##Int#>)
         
         metalKitView.depthStencilPixelFormat = MTLPixelFormat.depth32Float_stencil8
         metalKitView.colorPixelFormat = MTLPixelFormat.bgra8Unorm_srgb
@@ -79,8 +89,14 @@ class Renderer: NSObject, MTKViewDelegate
         guard let state = device.makeDepthStencilState(descriptor: depthStateDescriptor) else {return nil}
         depthState = state
         
+        //TODO: Let's not actually do this...
         cubeModel = PGModel()
-        cubeModel.buildDebugCube(dimensions: vector_float3(0.25,0.25,0.25), device: self.device, mtlVertexDescriptor: mtlVertexDescriptor)
+        do {
+            try cubeModel.buildDebugCube(dimensions: vector_float3(0.25,0.25,0.25), device: self.device, mtlVertexDescriptor: mtlVertexDescriptor)
+        } catch {
+            print("Unable to build debug cube")
+            return nil
+        }
         
         super.init()
         
@@ -153,6 +169,7 @@ class Renderer: NSObject, MTKViewDelegate
         
         uniforms = UnsafeMutableRawPointer(dynamicUniformBuffer.contents() + uniformBufferOffset).bindMemory(to: Uniforms.self, capacity: 1)
     }
+    
     var lightRotation:Float = 0.0
     
     //TODO: Doesn't have anything to do with renderer
@@ -169,8 +186,8 @@ class Renderer: NSObject, MTKViewDelegate
         let lightRotationMatrix = matrix4x4_rotation(radians: lightRotation, axis: rotationAxis)
         
         uniforms[0].viewMatrix = simd_inverse(viewTransform)
-        self.pointLight.position = lightRotationMatrix * vector_float4(0,0,11,1)
-        uniforms[0].lights = self.pointLight
+        self.lights[0].position = lightRotationMatrix * vector_float4(0,0,2,1)
+        uniforms[0].lights = self.lights[0]
         lightRotation += 0.015
         //self.rotation += 0.005
        // self.translation += vector_float3(0.00, 0.00, 0.00)

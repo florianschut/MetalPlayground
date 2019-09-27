@@ -49,10 +49,13 @@ typedef struct
 {
     matrix_float4x4 projectionMatrix;
     matrix_float4x4 viewMatrix;
-    matrix_float4x4 modelMatrix;
     Light lights;
-} Uniforms;
+} SharedUniforms;
 
+typedef struct
+{
+    matrix_float4x4 modelMatrix;
+} ObjectUniforms;
 
 #endif /* ShaderTypes_h */
 

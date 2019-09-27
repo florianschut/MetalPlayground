@@ -30,21 +30,21 @@ typedef struct
 
 
 vertex ColorInOut vertexShader(Vertex in [[stage_in]],
-                               constant Uniforms & uniforms [[buffer(BufferIndexUniforms)]])
+                               constant SharedUniforms & uniforms [[buffer(BufferIndexUniforms)]])
 {
     ColorInOut out;
     
     float4 position = float4(in.position, 1.0);
-    out.position = (uniforms.projectionMatrix * uniforms.viewMatrix * uniforms.modelMatrix) * position;
-    out.fragWorldPos = uniforms.modelMatrix * position;
-    out.normal = normalize((uniforms.modelMatrix * float4(in.normal, 1.0f)).xyz);
+    //out.position = (uniforms.projectionMatrix * uniforms.viewMatrix * uniforms.modelMatrix) * position;
+    //out.fragWorldPos = uniforms.modelMatrix * position;
+    //out.normal = normalize((uniforms.modelMatrix * float4(in.normal, 1.0f)).xyz);
     out.texCoord = float2(in.texCoord.x, -in.texCoord.y + 1);
     
     return out;
 }
 
 fragment float4 fragmentShader(ColorInOut in [[stage_in]],
-                              constant Uniforms & uniforms [[buffer(BufferIndexUniforms)]],
+                              constant SharedUniforms & uniforms [[buffer(BufferIndexUniforms)]],
                               texture2d<half> colorMap [[texture(TextureIndexColor)]])
 {
     constexpr sampler colorSampler(mip_filter::linear,
