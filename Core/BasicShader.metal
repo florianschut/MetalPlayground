@@ -30,31 +30,32 @@ typedef struct
 
 
 vertex ColorInOut vertexShader(Vertex in [[stage_in]],
-                               constant SharedUniforms & uniforms [[buffer(BufferIndexUniforms)]])
+                               constant SharedUniforms & sharedUniforms [[buffer(BufferIndexSharedUniforms)]],
+                               constant ObjectUniforms & objectUniforms [[buffer(BufferIndexObjectUniforms)]])
 {
     ColorInOut out;
     
     float4 position = float4(in.position, 1.0);
-    //out.position = (uniforms.projectionMatrix * uniforms.viewMatrix * uniforms.modelMatrix) * position;
-    //out.fragWorldPos = uniforms.modelMatrix * position;
-    //out.normal = normalize((uniforms.modelMatrix * float4(in.normal, 1.0f)).xyz);
+    out.position = (sharedUniforms.projectionMatrix * sharedUniforms.viewMatrix * objectUniforms.modelMatrix) * position;
+    out.fragWorldPos = objectUniforms.modelMatrix * position;
+    out.normal = normalize((objectUniforms.modelMatrix * float4(in.normal, 1.0f)).xyz);
     out.texCoord = float2(in.texCoord.x, -in.texCoord.y + 1);
     
     return out;
 }
 
 fragment float4 fragmentShader(ColorInOut in [[stage_in]],
-                              constant SharedUniforms & uniforms [[buffer(BufferIndexUniforms)]],
+                              constant SharedUniforms & sharedUniforms [[buffer(BufferIndexSharedUniforms)]],
                               texture2d<half> colorMap [[texture(TextureIndexColor)]])
 {
     constexpr sampler colorSampler(mip_filter::linear,
                                         mag_filter::linear,
                                         min_filter::linear);
     float4 colorSample = float4(colorMap.sample(colorSampler, in.texCoord.xy));
-    float3 lightDir = normalize(uniforms.lights.position - in.fragWorldPos).xyz;
-    float4 viewDir = normalize((-uniforms.viewMatrix[3]) - in.fragWorldPos);
+    float3 lightDir = normalize(sharedUniforms.lights.position - in.fragWorldPos).xyz;
+    float4 viewDir = normalize((-sharedUniforms.viewMatrix[3]) - in.fragWorldPos);
     
-    float3 specularCol =  uniforms.lights.color.xyz * pow(max(dot(viewDir.xyz, reflect(-lightDir, in.normal)), 0.0), 12);
+    float3 specularCol =  sharedUniforms.lights.color.xyz * pow(max(dot(viewDir.xyz, reflect(-lightDir, in.normal)), 0.0), 12);
     float3 ambientCol = colorSample.xyz * 0.135;
     float3 diffuseCol = colorSample.xyz * max(dot(lightDir, in.normal), 0.0f);
     float3 outCol = diffuseCol + ambientCol + specularCol;

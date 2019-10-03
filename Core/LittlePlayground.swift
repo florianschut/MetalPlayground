@@ -61,7 +61,7 @@ class LittlePlayground {
             }
             self.renderer.pgModels.append(dragonModel)
         }
-        if(false){
+        do{
             let model = PGModel()
             let modelUrl = Bundle.main.url(forResource: "craneo", withExtension: "OBJ")
             do{

@@ -64,7 +64,7 @@ class PGModel{
         attributes[VertexAttribute.normal.rawValue].name = MDLVertexAttributeNormal
         
         cubeMesh.vertexDescriptor = mdlVertexDescriptor
-        
+        self.colorMaps.append(Utilities.GetWhiteTexture(device: device)!)
         try self.meshes.append(MTKMesh(mesh: cubeMesh, device: device))
     }
     

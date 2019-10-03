@@ -13,7 +13,7 @@ import ModelIO
 
 let alignedSharedUniformsSize = (MemoryLayout<SharedUniforms>.size + 0xff) & -0x100
 let alignedObjectUniformsSize = (MemoryLayout<ObjectUniforms>.size + 0xff) & -0x100
-let numObjectUniforms = 4
+let numObjectUniforms = 2
 
 let maxBuffersInFlight = 3
 
@@ -39,7 +39,8 @@ class Renderer: NSObject, MTKViewDelegate
     
     let inFlightSemaphore = DispatchSemaphore(value: maxBuffersInFlight)
 
-    var uniformBufferOffset = 0
+    var sharedUniformBufferOffset = 0
+    var objectUniformBufferOffset = 0
 
     var uniformBufferIndex = 0
 
@@ -59,16 +60,16 @@ class Renderer: NSObject, MTKViewDelegate
         let sharedUniformBufferSize = alignedSharedUniformsSize * maxBuffersInFlight
         let objectUniformBufferSize = alignedObjectUniformsSize * maxBuffersInFlight * numObjectUniforms
         
-        guard let sharedBuffer = self.device.makeBuffer(length: uniformBufferSize, options: [.storageModeShared]) else {return nil}
+        guard let sharedBuffer = self.device.makeBuffer(length: sharedUniformBufferSize, options: [.storageModeShared]) else {return nil}
         dynamicSharedUniformBuffer = sharedBuffer
         self.dynamicSharedUniformBuffer.label = "SharedUniformBuffer"
         
-        guard let objectBuffer = self.device.makeBuffer(length: sharedUniformBufferSize, options: [.storageModeShared]) else {return nil}
+        guard let objectBuffer = self.device.makeBuffer(length: objectUniformBufferSize, options: [.storageModeShared]) else {return nil}
         dynamicObjectUniformBuffer = objectBuffer
         self.dynamicObjectUniformBuffer.label = "ObjectUniformBuffer"
         
-        sharedUniforms = UnsafeMutableRawPointer(dynamicSharedUniformBuffer.contents()).bindMemory(to: SharedUniforms.self, capacity: 1)
-        ObjectUniforms = UnsafeMutableRawPointer(dynamicObjectUniformBuffer.contents()).bindMemory(to: ObjectUniforms.self, capacity: <#T##Int#>)
+        self.sharedUniforms = UnsafeMutableRawPointer(dynamicSharedUniformBuffer.contents()).bindMemory(to: SharedUniforms.self, capacity: 1)
+        self.objectUniforms = UnsafeMutableRawPointer(dynamicObjectUniformBuffer.contents()).bindMemory(to: ObjectUniforms.self, capacity: numObjectUniforms)
         
         metalKitView.depthStencilPixelFormat = MTLPixelFormat.depth32Float_stencil8
         metalKitView.colorPixelFormat = MTLPixelFormat.bgra8Unorm_srgb
@@ -165,29 +166,33 @@ class Renderer: NSObject, MTKViewDelegate
     private func updateDynamicBufferState(){
         uniformBufferIndex = (uniformBufferIndex + 1) % maxBuffersInFlight
         
-        uniformBufferOffset = alignedUniformsSize * uniformBufferIndex
+        sharedUniformBufferOffset = alignedSharedUniformsSize * uniformBufferIndex
+        objectUniformBufferOffset = alignedObjectUniformsSize * uniformBufferIndex * numObjectUniforms
         
-        uniforms = UnsafeMutableRawPointer(dynamicUniformBuffer.contents() + uniformBufferOffset).bindMemory(to: Uniforms.self, capacity: 1)
+        sharedUniforms = UnsafeMutableRawPointer(dynamicSharedUniformBuffer.contents() + sharedUniformBufferOffset).bindMemory(to: SharedUniforms.self, capacity: 1)
+        objectUniforms = UnsafeMutableRawPointer(dynamicObjectUniformBuffer.contents() + objectUniformBufferOffset).bindMemory(to: ObjectUniforms.self, capacity: numObjectUniforms)
     }
     
     var lightRotation:Float = 0.0
     
     //TODO: Doesn't have anything to do with renderer
     private func updateGameState(){
-        uniforms[0].projectionMatrix = projectionMatrix
+        sharedUniforms[0].projectionMatrix = projectionMatrix
         
         let rotationAxis = SIMD3<Float>(0,1,0)
         let modelMatrix = matrix4x4_rotation(radians: rotation, axis: rotationAxis)
         //let cameraRotation = matrix4x4_rotation(radians: radians_from_degrees(33), axis: rotationAxis)
        // let modelMatrix = matrix4x4_translation(self.translation.x, self.translation.y, self.translation.z)
-        let viewTransform = matrix4x4_translation(0.0, 0.0, 2.5)
+        let viewTransform = matrix4x4_translation(0.0, 0.0, 5)
         //viewTransform *= cameraRotation
-        uniforms[0].modelMatrix = modelMatrix
+        objectUniforms[0].modelMatrix = modelMatrix
         let lightRotationMatrix = matrix4x4_rotation(radians: lightRotation, axis: rotationAxis)
-        
-        uniforms[0].viewMatrix = simd_inverse(viewTransform)
         self.lights[0].position = lightRotationMatrix * vector_float4(0,0,2,1)
-        uniforms[0].lights = self.lights[0]
+        let lightScaleMatrix = matrix_float4x4(diagonal: vector_float4(vector_float3(repeating:0.25), 1))
+        objectUniforms[1].modelMatrix = matrix4x4_translation(self.lights[0].position.x, self.lights[0].position.y, self.lights[0].position.z) * lightScaleMatrix
+        sharedUniforms[0].lights = self.lights[0]
+            
+        sharedUniforms[0].viewMatrix = simd_inverse(viewTransform)
         lightRotation += 0.015
         //self.rotation += 0.005
        // self.translation += vector_float3(0.00, 0.00, 0.00)
@@ -224,12 +229,14 @@ class Renderer: NSObject, MTKViewDelegate
                 
                 renderEncoder.setDepthStencilState(depthState)
                 
-                renderEncoder.setVertexBuffer(dynamicUniformBuffer, offset: uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
-                renderEncoder.setFragmentBuffer(dynamicUniformBuffer, offset: uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
-                for model in self.pgModels {
+                renderEncoder.setVertexBuffer(dynamicSharedUniformBuffer, offset: sharedUniformBufferOffset, index: BufferIndex.sharedUniforms.rawValue)
+                renderEncoder.setVertexBuffer(dynamicObjectUniformBuffer, offset: objectUniformBufferOffset , index: BufferIndex.objectUniforms.rawValue)
+                renderEncoder.setFragmentBuffer(dynamicSharedUniformBuffer, offset: sharedUniformBufferOffset, index: BufferIndex.sharedUniforms.rawValue)
+
+                for (n,model) in self.pgModels.enumerated() {
                     //TODO: Add logic for multiple textures and no textures
                     renderEncoder.setFragmentTexture(model.colorMaps[0], index: TextureIndex.color.rawValue)
-                    
+                    renderEncoder.setVertexBufferOffset(objectUniformBufferOffset + n * alignedObjectUniformsSize, index: BufferIndex.objectUniforms.rawValue)
                     //TODO: Read up on this stuff
                     for mesh in model.meshes {
                         for (index, element) in mesh.vertexDescriptor.layouts.enumerated(){
@@ -247,7 +254,6 @@ class Renderer: NSObject, MTKViewDelegate
                         }
                     }
                 }
-                //renderEncoder.drawIndexedPrimitives(type: , indexCount: <#T##Int#>, indexType: <#T##MTLIndexType#>, indexBuffer: <#T##MTLBuffer#>, indexBufferOffset: <#T##Int#>)
                 
                 renderEncoder.popDebugGroup()
                 
@@ -263,7 +269,7 @@ class Renderer: NSObject, MTKViewDelegate
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         let aspect = Float(size.width) / Float(size.height)
-        projectionMatrix = matrix_perspective_right_hand(fovyRadians: radians_from_degrees(65), aspectRatio: aspect, nearZ: 0.01, farZ: 10.0)
+        projectionMatrix = matrix_perspective_right_hand(fovyRadians: radians_from_degrees(65), aspectRatio: aspect, nearZ: 0.01, farZ: 50.0)
     }
 }
 

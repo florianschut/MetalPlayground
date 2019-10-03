@@ -39,6 +39,8 @@
 		178DFE7923312D36002F62E5 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178DFE7723312D36002F62E5 /* Model.swift */; };
 		1793DC21233381F400128847 /* dragon.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1793DC20233381F300128847 /* dragon.obj */; };
 		1793DC22233381F400128847 /* dragon.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1793DC20233381F300128847 /* dragon.obj */; };
+		179A06DB23461144000DB425 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179A06DA23461144000DB425 /* Utility.swift */; };
+		179A06DC23461144000DB425 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179A06DA23461144000DB425 /* Utility.swift */; };
 		17F3A4DA2330E7DA003DECBD /* LittlePlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3A4D92330E7DA003DECBD /* LittlePlayground.swift */; };
 		17F3A4DB2330E7DA003DECBD /* LittlePlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3A4D92330E7DA003DECBD /* LittlePlayground.swift */; };
 		17F8ABDB2327C44A00F240D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F8ABDA2327C44A00F240D9 /* AppDelegate.swift */; };
@@ -70,6 +72,7 @@
 		177AAA66232BCF3700D5B4A2 /* model.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = model.obj; sourceTree = "<group>"; };
 		178DFE7723312D36002F62E5 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1793DC20233381F300128847 /* dragon.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dragon.obj; sourceTree = "<group>"; };
+		179A06DA23461144000DB425 /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		17F3A4D92330E7DA003DECBD /* LittlePlayground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LittlePlayground.swift; sourceTree = "<group>"; };
 		17F8ABD82327C44A00F240D9 /* MetalPlaygroundMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetalPlaygroundMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		17F8ABDA2327C44A00F240D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -189,6 +192,7 @@
 				17F8ABEC23293AED00F240D9 /* ShaderTypes.h */,
 				17F3A4D92330E7DA003DECBD /* LittlePlayground.swift */,
 				178DFE7723312D36002F62E5 /* Model.swift */,
+				179A06DA23461144000DB425 /* Utility.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -322,6 +326,7 @@
 				177AAA31232AA6E300D5B4A2 /* ViewController.swift in Sources */,
 				177AAA2D232AA6E300D5B4A2 /* AppDelegate.swift in Sources */,
 				177AAA2F232AA6E300D5B4A2 /* SceneDelegate.swift in Sources */,
+				179A06DC23461144000DB425 /* Utility.swift in Sources */,
 				177AAA3F232AA85E00D5B4A2 /* Renderer.swift in Sources */,
 				177AAA3E232AA84700D5B4A2 /* BasicShader.metal in Sources */,
 				17F3A4DB2330E7DA003DECBD /* LittlePlayground.swift in Sources */,
@@ -332,6 +337,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				179A06DB23461144000DB425 /* Utility.swift in Sources */,
 				17F8ABDD2327C44A00F240D9 /* ViewController.swift in Sources */,
 				17F8ABEA2327C4F800F240D9 /* Renderer.swift in Sources */,
 				17F8ABDB2327C44A00F240D9 /* AppDelegate.swift in Sources */,
