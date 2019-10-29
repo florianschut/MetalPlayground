@@ -26,19 +26,22 @@ typedef NS_ENUM(NSInteger, BufferIndex)
     BufferIndexMeshNormals      = 1,
     BufferIndexMeshGenerics     = 2,
     BufferIndexSharedUniforms   = 3,
-    BufferIndexObjectUniforms    = 4
+    BufferIndexObjectUniforms   = 4,
 };
 
 typedef NS_ENUM(NSInteger, VertexAttribute)
 {
     VertexAttributePosition  = 0,
-    VertexAttributeNormal = 1,
+    VertexAttributeNormal    = 1,
     VertexAttributeTexcoord  = 2,
+    VertexAttributeTangent   = 3,
 };
 
 typedef NS_ENUM(NSInteger, TextureIndex)
 {
-    TextureIndexColor    = 0,
+    TextureIndexColor   = 0,
+    TextureIndexNormal  = 1,
+    TextureIndexGloss   = 2,
 };
 
 typedef struct{

@@ -11,7 +11,9 @@ import ModelIO
 
 class PGModel{
     var meshes: [MTKMesh] = []
-    var colorMaps: [MTLTexture] = []
+    var albedoTextures: [MTLTexture] = []
+    var normalTextures: [MTLTexture] = []
+    var glossTextures: [MTLTexture] = []
     
     func buildMeshFromFile(url: URL!, device: MTLDevice, mtlVertexDescriptor: MTLVertexDescriptor) throws {
         let metalAllocator = MTKMeshBufferAllocator(device: device)
@@ -26,26 +28,18 @@ class PGModel{
         attributes[VertexAttribute.position.rawValue].name = MDLVertexAttributePosition
         attributes[VertexAttribute.texcoord.rawValue].name = MDLVertexAttributeTextureCoordinate
         attributes[VertexAttribute.normal.rawValue].name = MDLVertexAttributeNormal
+        attributes[VertexAttribute.tangent.rawValue].name = MDLVertexAttributeTangent
 
         let asset = MDLAsset(url: url, vertexDescriptor: mdlVertexDescriptor, bufferAllocator: metalAllocator)
 
         let meshes = asset.childObjects(of: MDLMesh.self) as! [MDLMesh]
         for mesh in meshes{
-            mesh.addNormals(withAttributeNamed: MDLVertexAttributeNormal, creaseThreshold: 1.0)
+            //mesh.addNormals(withAttributeNamed: MDLVertexAttributeNormal, creaseThreshold: 0.0)
+            mesh.addOrthTanBasis(forTextureCoordinateAttributeNamed: MDLVertexAttributeTextureCoordinate, normalAttributeNamed: MDLVertexAttributeNormal, tangentAttributeNamed: MDLVertexAttributeTangent)
             try self.meshes.append(MTKMesh(mesh: mesh, device: device))
         }
     }
-    
-    func LoadTexture(url: URL!, device: MTLDevice, textureName: String) throws {
-        let textureLoader = MTKTextureLoader(device: device)
-        
-        let textureLoaderOptions = [
-            MTKTextureLoader.Option.textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue),
-            MTKTextureLoader.Option.textureStorageMode: NSNumber(value: MTLStorageMode.private.rawValue)
-        ]
-
-        self.colorMaps.append(try textureLoader.newTexture(URL: url, options: textureLoaderOptions))
-    }
+       
     
     func buildDebugCube(dimensions: vector_float3,device: MTLDevice, mtlVertexDescriptor: MTLVertexDescriptor) throws{
         let metalAllocator = MTKMeshBufferAllocator(device: device)
@@ -64,7 +58,9 @@ class PGModel{
         attributes[VertexAttribute.normal.rawValue].name = MDLVertexAttributeNormal
         
         cubeMesh.vertexDescriptor = mdlVertexDescriptor
-        self.colorMaps.append(Utilities.GetWhiteTexture(device: device)!)
+        self.albedoTextures.append(Utilities.GetWhiteTexture(device: device))
+        self.normalTextures.append(Utilities.GetWhiteTexture(device: device))
+        self.glossTextures.append(Utilities.GetBlackTexture(device: device))
         try self.meshes.append(MTKMesh(mesh: cubeMesh, device: device))
     }
     

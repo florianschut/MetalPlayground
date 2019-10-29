@@ -33,7 +33,6 @@ class Renderer: NSObject, MTKViewDelegate
     var pgModels: [PGModel] = []
     var lights: [Light] = [Light(position: vector_float4(-2.0, 1.0, 2.0, 1), color: vector_float4(1.0,1.0,1.0,1.0)),
                            Light(position: vector_float4(2.0, 1.0, 2.0, 1), color: vector_float4(0.0,1.0,0.0,1.0)) ]
-    var cubeModel: PGModel;
     
     var roatationVector: vector_float4 = vector_float4()
     
@@ -90,15 +89,6 @@ class Renderer: NSObject, MTKViewDelegate
         guard let state = device.makeDepthStencilState(descriptor: depthStateDescriptor) else {return nil}
         depthState = state
         
-        //TODO: Let's not actually do this...
-        cubeModel = PGModel()
-        do {
-            try cubeModel.buildDebugCube(dimensions: vector_float3(0.25,0.25,0.25), device: self.device, mtlVertexDescriptor: mtlVertexDescriptor)
-        } catch {
-            print("Unable to build debug cube")
-            return nil
-        }
-        
         super.init()
         
     }
@@ -119,15 +109,19 @@ class Renderer: NSObject, MTKViewDelegate
         mtlVertexDescriptor.attributes[VertexAttribute.texcoord.rawValue].offset = 0
         mtlVertexDescriptor.attributes[VertexAttribute.texcoord.rawValue].bufferIndex = BufferIndex.meshGenerics.rawValue
         
-        mtlVertexDescriptor.layouts[BufferIndex.meshPositions.rawValue].stride = 12
+        mtlVertexDescriptor.attributes[VertexAttribute.tangent.rawValue].format = MTLVertexFormat.float4
+        mtlVertexDescriptor.attributes[VertexAttribute.tangent.rawValue].offset = MemoryLayout<Float>.size * 2
+        mtlVertexDescriptor.attributes[VertexAttribute.tangent.rawValue].bufferIndex = BufferIndex.meshGenerics.rawValue
+        
+        mtlVertexDescriptor.layouts[BufferIndex.meshPositions.rawValue].stride = MemoryLayout<Float>.size * 3
         mtlVertexDescriptor.layouts[BufferIndex.meshPositions.rawValue].stepRate = 1
         mtlVertexDescriptor.layouts[BufferIndex.meshPositions.rawValue].stepFunction = MTLVertexStepFunction.perVertex
         
-        mtlVertexDescriptor.layouts[BufferIndex.meshNormals.rawValue].stride = 12
+        mtlVertexDescriptor.layouts[BufferIndex.meshNormals.rawValue].stride = MemoryLayout<Float>.size * 3
         mtlVertexDescriptor.layouts[BufferIndex.meshNormals.rawValue].stepRate = 1
         mtlVertexDescriptor.layouts[BufferIndex.meshNormals.rawValue].stepFunction = MTLVertexStepFunction.perVertex
 
-        mtlVertexDescriptor.layouts[BufferIndex.meshGenerics.rawValue].stride = 8
+        mtlVertexDescriptor.layouts[BufferIndex.meshGenerics.rawValue].stride = MemoryLayout<Float>.size * 6
         mtlVertexDescriptor.layouts[BufferIndex.meshGenerics.rawValue].stepRate = 1
         mtlVertexDescriptor.layouts[BufferIndex.meshGenerics.rawValue].stepFunction = MTLVertexStepFunction.perVertex
         
@@ -183,7 +177,7 @@ class Renderer: NSObject, MTKViewDelegate
         let modelMatrix = matrix4x4_rotation(radians: rotation, axis: rotationAxis)
         //let cameraRotation = matrix4x4_rotation(radians: radians_from_degrees(33), axis: rotationAxis)
        // let modelMatrix = matrix4x4_translation(self.translation.x, self.translation.y, self.translation.z)
-        let viewTransform = matrix4x4_translation(0.0, 0.0, 5)
+        let viewTransform = matrix4x4_translation(0.0, 0.0, 3)
         //viewTransform *= cameraRotation
         objectUniforms[0].modelMatrix = modelMatrix
         let lightRotationMatrix = matrix4x4_rotation(radians: lightRotation, axis: rotationAxis)
@@ -235,7 +229,9 @@ class Renderer: NSObject, MTKViewDelegate
 
                 for (n,model) in self.pgModels.enumerated() {
                     //TODO: Add logic for multiple textures and no textures
-                    renderEncoder.setFragmentTexture(model.colorMaps[0], index: TextureIndex.color.rawValue)
+                    renderEncoder.setFragmentTexture(model.albedoTextures[0], index: TextureIndex.color.rawValue)
+                    renderEncoder.setFragmentTexture(model.normalTextures[0], index: TextureIndex.normal.rawValue)
+                    renderEncoder.setFragmentTexture(model.glossTextures[0], index: TextureIndex.gloss.rawValue)
                     renderEncoder.setVertexBufferOffset(objectUniformBufferOffset + n * alignedObjectUniformsSize, index: BufferIndex.objectUniforms.rawValue)
                     //TODO: Read up on this stuff
                     for mesh in model.meshes {
@@ -249,9 +245,18 @@ class Renderer: NSObject, MTKViewDelegate
                                 renderEncoder.setVertexBuffer(buffer.buffer, offset: buffer.offset, index: index)
                             }
                         }
-                        for submesh in mesh.submeshes {
+                        for (n, submesh) in mesh.submeshes.enumerated() {
+                            //TODO:: Add solid system for this
+                            if n >= 10 {
+                                renderEncoder.pushDebugGroup("AlbedoTexture 1")
+                                renderEncoder.setFragmentTexture(model.albedoTextures[1], index: TextureIndex.color.rawValue)
+                                renderEncoder.setFragmentTexture(model.normalTextures[1], index: TextureIndex.normal.rawValue)
+                                renderEncoder.setFragmentTexture(model.glossTextures[1], index: TextureIndex.gloss.rawValue)
+                                
+                            }
                             renderEncoder.drawIndexedPrimitives(type: submesh.primitiveType, indexCount: submesh.indexCount, indexType: submesh.indexType, indexBuffer: submesh.indexBuffer.buffer, indexBufferOffset: submesh.indexBuffer.offset)
                         }
+                        renderEncoder.popDebugGroup()
                     }
                 }
                 
