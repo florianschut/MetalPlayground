@@ -13,7 +13,8 @@ class PGModel{
     var meshes: [MTKMesh] = []
     var albedoTextures: [MTLTexture] = []
     var normalTextures: [MTLTexture] = []
-    var glossTextures: [MTLTexture] = []
+    var metallicTextures: [MTLTexture] = []
+    var roughnessTextures: [MTLTexture] = []
     
     func buildMeshFromFile(url: URL!, device: MTLDevice, mtlVertexDescriptor: MTLVertexDescriptor) throws {
         let metalAllocator = MTKMeshBufferAllocator(device: device)
@@ -60,7 +61,8 @@ class PGModel{
         cubeMesh.vertexDescriptor = mdlVertexDescriptor
         self.albedoTextures.append(Utilities.GetWhiteTexture(device: device))
         self.normalTextures.append(Utilities.GetWhiteTexture(device: device))
-        self.glossTextures.append(Utilities.GetBlackTexture(device: device))
+        self.metallicTextures.append(Utilities.GetWhiteTexture(device: device))
+        self.roughnessTextures.append(Utilities.GetBlackTexture(device: device))
         try self.meshes.append(MTKMesh(mesh: cubeMesh, device: device))
     }
     

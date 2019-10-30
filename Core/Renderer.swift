@@ -177,7 +177,7 @@ class Renderer: NSObject, MTKViewDelegate
         let modelMatrix = matrix4x4_rotation(radians: rotation, axis: rotationAxis)
         //let cameraRotation = matrix4x4_rotation(radians: radians_from_degrees(33), axis: rotationAxis)
        // let modelMatrix = matrix4x4_translation(self.translation.x, self.translation.y, self.translation.z)
-        let viewTransform = matrix4x4_translation(0.0, 0.0, 3)
+        let viewTransform = matrix4x4_translation(0.0, 0, 3)
         //viewTransform *= cameraRotation
         objectUniforms[0].modelMatrix = modelMatrix
         let lightRotationMatrix = matrix4x4_rotation(radians: lightRotation, axis: rotationAxis)
@@ -215,7 +215,7 @@ class Renderer: NSObject, MTKViewDelegate
                 
                 renderEncoder.pushDebugGroup("Draw Box")
                 
-                renderEncoder.setCullMode(.back)
+                renderEncoder.setCullMode(.none)
                 
                 renderEncoder.setFrontFacing(.counterClockwise)
                 
@@ -231,7 +231,8 @@ class Renderer: NSObject, MTKViewDelegate
                     //TODO: Add logic for multiple textures and no textures
                     renderEncoder.setFragmentTexture(model.albedoTextures[0], index: TextureIndex.color.rawValue)
                     renderEncoder.setFragmentTexture(model.normalTextures[0], index: TextureIndex.normal.rawValue)
-                    renderEncoder.setFragmentTexture(model.glossTextures[0], index: TextureIndex.gloss.rawValue)
+                    renderEncoder.setFragmentTexture(model.metallicTextures[0], index: TextureIndex.metallic.rawValue)
+                    renderEncoder.setFragmentTexture(model.roughnessTextures[0], index: TextureIndex.roughness.rawValue)
                     renderEncoder.setVertexBufferOffset(objectUniformBufferOffset + n * alignedObjectUniformsSize, index: BufferIndex.objectUniforms.rawValue)
                     //TODO: Read up on this stuff
                     for mesh in model.meshes {
@@ -247,13 +248,13 @@ class Renderer: NSObject, MTKViewDelegate
                         }
                         for (n, submesh) in mesh.submeshes.enumerated() {
                             //TODO:: Add solid system for this
-                            if n >= 10 {
-                                renderEncoder.pushDebugGroup("AlbedoTexture 1")
-                                renderEncoder.setFragmentTexture(model.albedoTextures[1], index: TextureIndex.color.rawValue)
-                                renderEncoder.setFragmentTexture(model.normalTextures[1], index: TextureIndex.normal.rawValue)
-                                renderEncoder.setFragmentTexture(model.glossTextures[1], index: TextureIndex.gloss.rawValue)
-                                
-                            }
+//                            if n >= 10 {
+//                                renderEncoder.pushDebugGroup("AlbedoTexture 1")
+//                                renderEncoder.setFragmentTexture(model.albedoTextures[1], index: TextureIndex.color.rawValue)
+//                                renderEncoder.setFragmentTexture(model.normalTextures[1], index: TextureIndex.normal.rawValue)
+//                                renderEncoder.setFragmentTexture(model.glossTextures[1], index: TextureIndex.gloss.rawValue)
+//
+//                            }
                             renderEncoder.drawIndexedPrimitives(type: submesh.primitiveType, indexCount: submesh.indexCount, indexType: submesh.indexType, indexBuffer: submesh.indexBuffer.buffer, indexBufferOffset: submesh.indexBuffer.offset)
                         }
                         renderEncoder.popDebugGroup()

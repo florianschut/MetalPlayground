@@ -62,7 +62,7 @@ class LittlePlayground {
             self.renderer.pgModels.append(dragonModel)
         }
         
-        do{
+        if(false){
             let model = PGModel()
             let modelUrl = Bundle.main.url(forResource: "servoSkull", withExtension: "obj")
             do{
@@ -82,16 +82,66 @@ class LittlePlayground {
             do {
                 try model.albedoTextures.append( Utilities.LoadTextureFromFile(url: mehcanicsAlbedoUrl, device: metalKitView.device!))
                 try model.normalTextures.append( Utilities.LoadTextureFromFile(url: mehcanicsNormalUrl, device: metalKitView.device!))
-                try model.glossTextures.append(Utilities.LoadTextureFromFile(url: mehcanicsGlossUrl, device: metalKitView.device!))
+                //try model.glossTextures.append(Utilities.LoadTextureFromFile(url: mehcanicsGlossUrl, device: metalKitView.device!))
                 try model.albedoTextures.append( Utilities.LoadTextureFromFile(url: faceAlbedoUrl, device: metalKitView.device!))
                 try model.normalTextures.append( Utilities.LoadTextureFromFile(url: faceNormalUrl, device: metalKitView.device!))
-                try model.glossTextures.append(Utilities.LoadTextureFromFile(url: faceGlossUrl, device: metalKitView.device!))
+                //try model.glossTextures.append(Utilities.LoadTextureFromFile(url: faceGlossUrl, device: metalKitView.device!))
             } catch {
                 print("Unable to load texture. Error info: \(error)")
             }
             self.renderer.pgModels.append(model)
         }
         
+        if(false) {
+            let model = PGModel()
+            let modelUrl = Bundle.main.url(forResource: "helmetWavefront", withExtension: "obj")
+            
+            do{
+                try model.buildMeshFromFile(url: modelUrl, device: metalKitView.device!, mtlVertexDescriptor: renderer.mtlVertexDescriptor)
+            }catch{
+                print("Unable to build MetalKit Mesh. Error info: \(error)")
+            }
+            
+            let albedoUrl = Bundle.main.url(forResource: "GAP_Exam_BaseColor_OlmoPotums_2DAE2", withExtension: "png")
+            let normalUrl = Bundle.main.url(forResource: "GAP_Exam_Normal_OlmoPotums_2DAE2", withExtension: "png")
+            let metallicUrl = Bundle.main.url(forResource: "GAP_Exam_Metal_OlmoPotums_2DAE2", withExtension: "png")
+            let roughnessUrl = Bundle.main.url(forResource: "GAP_Exam_Rough_OlmoPotums_2DAE2", withExtension: "png")
+            
+            do {
+                try model.albedoTextures.append( Utilities.LoadTextureFromFile(url: albedoUrl, device: metalKitView.device!))
+                try model.normalTextures.append( Utilities.LoadTextureFromFile(url: normalUrl, device: metalKitView.device!))
+                try model.metallicTextures.append( Utilities.LoadTextureFromFile(url: metallicUrl, device: metalKitView.device!))
+                try model.roughnessTextures.append( Utilities.LoadTextureFromFile(url: roughnessUrl, device: metalKitView.device!))
+            } catch {
+                print("Unable to load texture. Error info: \(error)")
+            }
+            self.renderer.pgModels.append(model)
+        }
+        do{
+            let model = PGModel()
+            let modelUrl = Bundle.main.url(forResource: "scifiTank", withExtension: "obj")
+            
+            do{
+                try model.buildMeshFromFile(url: modelUrl, device: metalKitView.device!, mtlVertexDescriptor: renderer.mtlVertexDescriptor)
+            }catch{
+                print("Unable to build MetalKit Mesh. Error info: \(error)")
+            }
+            
+            let albedoUrl = Bundle.main.url(forResource: "DefaultMaterial_albedo", withExtension: "jpeg")
+            let normalUrl = Bundle.main.url(forResource: "DefaultMaterial_normal", withExtension: "jpeg")
+            let metallicUrl = Bundle.main.url(forResource: "DefaultMaterial_metallic", withExtension: "jpeg")
+            let roughnessUrl = Bundle.main.url(forResource: "DefaultMaterial_roughness", withExtension: "jpeg")
+            
+            do {
+                try model.albedoTextures.append( Utilities.LoadTextureFromFile(url: albedoUrl, device: metalKitView.device!))
+                try model.normalTextures.append( Utilities.LoadTextureFromFile(url: normalUrl, device: metalKitView.device!))
+                try model.metallicTextures.append( Utilities.LoadTextureFromFile(url: metallicUrl, device: metalKitView.device!))
+                try model.roughnessTextures.append( Utilities.LoadTextureFromFile(url: roughnessUrl, device: metalKitView.device!))
+            } catch {
+                print("Unable to load texture. Error info: \(error)")
+            }
+            self.renderer.pgModels.append(model)
+        }
         do{
             let model = PGModel()
             do{

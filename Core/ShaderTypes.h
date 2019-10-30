@@ -39,9 +39,10 @@ typedef NS_ENUM(NSInteger, VertexAttribute)
 
 typedef NS_ENUM(NSInteger, TextureIndex)
 {
-    TextureIndexColor   = 0,
-    TextureIndexNormal  = 1,
-    TextureIndexGloss   = 2,
+    TextureIndexColor       = 0,
+    TextureIndexNormal      = 1,
+    TextureIndexMetallic    = 2,
+    TextureIndexRoughness   = 3,
 };
 
 typedef struct{

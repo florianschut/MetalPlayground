@@ -7,6 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1711C241236A2DF9008AE65D /* DefaultMaterial_albedo.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1711C23A236A2DF9008AE65D /* DefaultMaterial_albedo.jpeg */; };
+		1711C242236A2DF9008AE65D /* DefaultMaterial_albedo.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1711C23A236A2DF9008AE65D /* DefaultMaterial_albedo.jpeg */; };
+		1711C243236A2DF9008AE65D /* DefaultMaterial_normal.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1711C23B236A2DF9008AE65D /* DefaultMaterial_normal.jpeg */; };
+		1711C244236A2DF9008AE65D /* DefaultMaterial_normal.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1711C23B236A2DF9008AE65D /* DefaultMaterial_normal.jpeg */; };
+		1711C245236A2DF9008AE65D /* DefaultMaterial_metallic.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1711C23C236A2DF9008AE65D /* DefaultMaterial_metallic.jpeg */; };
+		1711C246236A2DF9008AE65D /* DefaultMaterial_metallic.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1711C23C236A2DF9008AE65D /* DefaultMaterial_metallic.jpeg */; };
+		1711C247236A2DF9008AE65D /* DefaultMaterial_roughness.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1711C23D236A2DF9008AE65D /* DefaultMaterial_roughness.jpeg */; };
+		1711C248236A2DF9008AE65D /* DefaultMaterial_roughness.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1711C23D236A2DF9008AE65D /* DefaultMaterial_roughness.jpeg */; };
+		1711C249236A2DF9008AE65D /* DefaultMaterial_AO_0.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1711C23E236A2DF9008AE65D /* DefaultMaterial_AO_0.jpeg */; };
+		1711C24A236A2DF9008AE65D /* DefaultMaterial_AO_0.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1711C23E236A2DF9008AE65D /* DefaultMaterial_AO_0.jpeg */; };
+		1711C24B236A2DF9008AE65D /* DefaultMaterial_AO.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1711C23F236A2DF9008AE65D /* DefaultMaterial_AO.jpeg */; };
+		1711C24C236A2DF9008AE65D /* DefaultMaterial_AO.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1711C23F236A2DF9008AE65D /* DefaultMaterial_AO.jpeg */; };
+		1711C24D236A2DF9008AE65D /* scifiTank.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1711C240236A2DF9008AE65D /* scifiTank.obj */; };
+		1711C24E236A2DF9008AE65D /* scifiTank.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1711C240236A2DF9008AE65D /* scifiTank.obj */; };
 		172FA2A4233BAB300049AD09 /* difuso_flip_oscuro.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 172FA29F233BAB300049AD09 /* difuso_flip_oscuro.jpg */; };
 		172FA2A5233BAB300049AD09 /* difuso_flip_oscuro.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 172FA29F233BAB300049AD09 /* difuso_flip_oscuro.jpg */; };
 		172FA2A6233BAB300049AD09 /* difuso_flip_oscuro_5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 172FA2A0233BAB300049AD09 /* difuso_flip_oscuro_5.jpg */; };
@@ -35,6 +49,18 @@
 		1793DC22233381F400128847 /* dragon.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1793DC20233381F300128847 /* dragon.obj */; };
 		179A06DB23461144000DB425 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179A06DA23461144000DB425 /* Utilities.swift */; };
 		179A06DC23461144000DB425 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179A06DA23461144000DB425 /* Utilities.swift */; };
+		17BD19F42369E061004E7283 /* GAP_Exam_Rough_OlmoPotums_2DAE2.png in Resources */ = {isa = PBXBuildFile; fileRef = 17BD19EE2369E061004E7283 /* GAP_Exam_Rough_OlmoPotums_2DAE2.png */; };
+		17BD19F52369E061004E7283 /* GAP_Exam_Rough_OlmoPotums_2DAE2.png in Resources */ = {isa = PBXBuildFile; fileRef = 17BD19EE2369E061004E7283 /* GAP_Exam_Rough_OlmoPotums_2DAE2.png */; };
+		17BD19F62369E061004E7283 /* GAP_Exam_BaseColor_OlmoPotums_2DAE2.png in Resources */ = {isa = PBXBuildFile; fileRef = 17BD19EF2369E061004E7283 /* GAP_Exam_BaseColor_OlmoPotums_2DAE2.png */; };
+		17BD19F72369E061004E7283 /* GAP_Exam_BaseColor_OlmoPotums_2DAE2.png in Resources */ = {isa = PBXBuildFile; fileRef = 17BD19EF2369E061004E7283 /* GAP_Exam_BaseColor_OlmoPotums_2DAE2.png */; };
+		17BD19F82369E061004E7283 /* GAP_Exam_Normal_OlmoPotums_2DAE2.png in Resources */ = {isa = PBXBuildFile; fileRef = 17BD19F02369E061004E7283 /* GAP_Exam_Normal_OlmoPotums_2DAE2.png */; };
+		17BD19F92369E061004E7283 /* GAP_Exam_Normal_OlmoPotums_2DAE2.png in Resources */ = {isa = PBXBuildFile; fileRef = 17BD19F02369E061004E7283 /* GAP_Exam_Normal_OlmoPotums_2DAE2.png */; };
+		17BD19FA2369E061004E7283 /* GAP_Exam_Metal_OlmoPotums_2DAE2.png in Resources */ = {isa = PBXBuildFile; fileRef = 17BD19F12369E061004E7283 /* GAP_Exam_Metal_OlmoPotums_2DAE2.png */; };
+		17BD19FB2369E061004E7283 /* GAP_Exam_Metal_OlmoPotums_2DAE2.png in Resources */ = {isa = PBXBuildFile; fileRef = 17BD19F12369E061004E7283 /* GAP_Exam_Metal_OlmoPotums_2DAE2.png */; };
+		17BD19FC2369E061004E7283 /* GAP_Exam_AO_OlmoPotums_2DAE2.png in Resources */ = {isa = PBXBuildFile; fileRef = 17BD19F22369E061004E7283 /* GAP_Exam_AO_OlmoPotums_2DAE2.png */; };
+		17BD19FD2369E061004E7283 /* GAP_Exam_AO_OlmoPotums_2DAE2.png in Resources */ = {isa = PBXBuildFile; fileRef = 17BD19F22369E061004E7283 /* GAP_Exam_AO_OlmoPotums_2DAE2.png */; };
+		17BD19FE2369E061004E7283 /* helmetWavefront.obj in Resources */ = {isa = PBXBuildFile; fileRef = 17BD19F32369E061004E7283 /* helmetWavefront.obj */; };
+		17BD19FF2369E061004E7283 /* helmetWavefront.obj in Resources */ = {isa = PBXBuildFile; fileRef = 17BD19F32369E061004E7283 /* helmetWavefront.obj */; };
 		17C854A5234CB57300CCD7B5 /* Servoskull_mechanics_gloss.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 17C85499234CB57300CCD7B5 /* Servoskull_mechanics_gloss.jpg */; };
 		17C854A6234CB57300CCD7B5 /* Servoskull_mechanics_gloss.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 17C85499234CB57300CCD7B5 /* Servoskull_mechanics_gloss.jpg */; };
 		17C854A7234CB57300CCD7B5 /* Servoskull_face_gloss.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 17C8549A234CB57300CCD7B5 /* Servoskull_face_gloss.jpg */; };
@@ -67,6 +93,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1711C23A236A2DF9008AE65D /* DefaultMaterial_albedo.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = DefaultMaterial_albedo.jpeg; sourceTree = "<group>"; };
+		1711C23B236A2DF9008AE65D /* DefaultMaterial_normal.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = DefaultMaterial_normal.jpeg; sourceTree = "<group>"; };
+		1711C23C236A2DF9008AE65D /* DefaultMaterial_metallic.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = DefaultMaterial_metallic.jpeg; sourceTree = "<group>"; };
+		1711C23D236A2DF9008AE65D /* DefaultMaterial_roughness.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = DefaultMaterial_roughness.jpeg; sourceTree = "<group>"; };
+		1711C23E236A2DF9008AE65D /* DefaultMaterial_AO_0.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = DefaultMaterial_AO_0.jpeg; sourceTree = "<group>"; };
+		1711C23F236A2DF9008AE65D /* DefaultMaterial_AO.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = DefaultMaterial_AO.jpeg; sourceTree = "<group>"; };
+		1711C240236A2DF9008AE65D /* scifiTank.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scifiTank.obj; sourceTree = "<group>"; };
 		172FA29F233BAB300049AD09 /* difuso_flip_oscuro.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = difuso_flip_oscuro.jpg; sourceTree = "<group>"; };
 		172FA2A0233BAB300049AD09 /* difuso_flip_oscuro_5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = difuso_flip_oscuro_5.jpg; sourceTree = "<group>"; };
 		172FA2A1233BAB300049AD09 /* normal_flip_3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = normal_flip_3.jpg; sourceTree = "<group>"; };
@@ -84,6 +117,12 @@
 		178DFE7723312D36002F62E5 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1793DC20233381F300128847 /* dragon.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dragon.obj; sourceTree = "<group>"; };
 		179A06DA23461144000DB425 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		17BD19EE2369E061004E7283 /* GAP_Exam_Rough_OlmoPotums_2DAE2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GAP_Exam_Rough_OlmoPotums_2DAE2.png; sourceTree = "<group>"; };
+		17BD19EF2369E061004E7283 /* GAP_Exam_BaseColor_OlmoPotums_2DAE2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GAP_Exam_BaseColor_OlmoPotums_2DAE2.png; sourceTree = "<group>"; };
+		17BD19F02369E061004E7283 /* GAP_Exam_Normal_OlmoPotums_2DAE2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GAP_Exam_Normal_OlmoPotums_2DAE2.png; sourceTree = "<group>"; };
+		17BD19F12369E061004E7283 /* GAP_Exam_Metal_OlmoPotums_2DAE2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GAP_Exam_Metal_OlmoPotums_2DAE2.png; sourceTree = "<group>"; };
+		17BD19F22369E061004E7283 /* GAP_Exam_AO_OlmoPotums_2DAE2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GAP_Exam_AO_OlmoPotums_2DAE2.png; sourceTree = "<group>"; };
+		17BD19F32369E061004E7283 /* helmetWavefront.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = helmetWavefront.obj; sourceTree = "<group>"; };
 		17C85499234CB57300CCD7B5 /* Servoskull_mechanics_gloss.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Servoskull_mechanics_gloss.jpg; sourceTree = "<group>"; };
 		17C8549A234CB57300CCD7B5 /* Servoskull_face_gloss.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Servoskull_face_gloss.jpg; sourceTree = "<group>"; };
 		17C8549B234CB57300CCD7B5 /* Servoskull_mechanics_normal.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Servoskull_mechanics_normal.jpg; sourceTree = "<group>"; };
@@ -125,6 +164,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1711C238236A2DF8008AE65D /* scifi-tank-doodad */ = {
+			isa = PBXGroup;
+			children = (
+				1711C239236A2DF9008AE65D /* textures */,
+				1711C240236A2DF9008AE65D /* scifiTank.obj */,
+			);
+			path = "scifi-tank-doodad";
+			sourceTree = "<group>";
+		};
+		1711C239236A2DF9008AE65D /* textures */ = {
+			isa = PBXGroup;
+			children = (
+				1711C23A236A2DF9008AE65D /* DefaultMaterial_albedo.jpeg */,
+				1711C23B236A2DF9008AE65D /* DefaultMaterial_normal.jpeg */,
+				1711C23C236A2DF9008AE65D /* DefaultMaterial_metallic.jpeg */,
+				1711C23D236A2DF9008AE65D /* DefaultMaterial_roughness.jpeg */,
+				1711C23E236A2DF9008AE65D /* DefaultMaterial_AO_0.jpeg */,
+				1711C23F236A2DF9008AE65D /* DefaultMaterial_AO.jpeg */,
+			);
+			path = textures;
+			sourceTree = "<group>";
+		};
 		172FA29D233BAB300049AD09 /* skull-downloadable */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,6 +236,27 @@
 			path = "king-gustav-vasas-helmet-with-a-gilt-crown";
 			sourceTree = "<group>";
 		};
+		17BD19EC2369E061004E7283 /* CVCHelmet */ = {
+			isa = PBXGroup;
+			children = (
+				17BD19ED2369E061004E7283 /* textures */,
+				17BD19F32369E061004E7283 /* helmetWavefront.obj */,
+			);
+			path = CVCHelmet;
+			sourceTree = "<group>";
+		};
+		17BD19ED2369E061004E7283 /* textures */ = {
+			isa = PBXGroup;
+			children = (
+				17BD19EE2369E061004E7283 /* GAP_Exam_Rough_OlmoPotums_2DAE2.png */,
+				17BD19EF2369E061004E7283 /* GAP_Exam_BaseColor_OlmoPotums_2DAE2.png */,
+				17BD19F02369E061004E7283 /* GAP_Exam_Normal_OlmoPotums_2DAE2.png */,
+				17BD19F12369E061004E7283 /* GAP_Exam_Metal_OlmoPotums_2DAE2.png */,
+				17BD19F22369E061004E7283 /* GAP_Exam_AO_OlmoPotums_2DAE2.png */,
+			);
+			path = textures;
+			sourceTree = "<group>";
+		};
 		17C85497234CB57300CCD7B5 /* lord-inquisitor-servo-skull */ = {
 			isa = PBXGroup;
 			children = (
@@ -213,6 +295,8 @@
 			children = (
 				17F8ABDE2327C44B00F240D9 /* Assets.xcassets */,
 				1793DC20233381F300128847 /* dragon.obj */,
+				1711C238236A2DF8008AE65D /* scifi-tank-doodad */,
+				17BD19EC2369E061004E7283 /* CVCHelmet */,
 				17C85497234CB57300CCD7B5 /* lord-inquisitor-servo-skull */,
 				172FA29D233BAB300049AD09 /* skull-downloadable */,
 				177AAA5C232BCD9C00D5B4A2 /* king-gustav-vasas-helmet-with-a-gilt-crown */,
@@ -338,18 +422,31 @@
 				17C854AE234CB57300CCD7B5 /* Servoskull_face_spec.jpg in Resources */,
 				17C854B4234CB57300CCD7B5 /* Servoskull_mechanics_spec.jpg in Resources */,
 				1793DC22233381F400128847 /* dragon.obj in Resources */,
+				1711C242236A2DF9008AE65D /* DefaultMaterial_albedo.jpeg in Resources */,
 				17C854A8234CB57300CCD7B5 /* Servoskull_face_gloss.jpg in Resources */,
+				1711C24C236A2DF9008AE65D /* DefaultMaterial_AO.jpeg in Resources */,
 				177AAA43232AA90400D5B4A2 /* Assets.xcassets in Resources */,
+				17BD19F72369E061004E7283 /* GAP_Exam_BaseColor_OlmoPotums_2DAE2.png in Resources */,
+				17BD19FD2369E061004E7283 /* GAP_Exam_AO_OlmoPotums_2DAE2.png in Resources */,
+				17BD19F92369E061004E7283 /* GAP_Exam_Normal_OlmoPotums_2DAE2.png in Resources */,
 				17C854B2234CB57300CCD7B5 /* Servoskull_face_normal.jpg in Resources */,
+				17BD19FB2369E061004E7283 /* GAP_Exam_Metal_OlmoPotums_2DAE2.png in Resources */,
 				17C854B0234CB57300CCD7B5 /* Servoskull_mechanics_diff.jpg in Resources */,
 				17C854A6234CB57300CCD7B5 /* Servoskull_mechanics_gloss.jpg in Resources */,
 				172FA2A7233BAB300049AD09 /* difuso_flip_oscuro_5.jpg in Resources */,
+				1711C244236A2DF9008AE65D /* DefaultMaterial_normal.jpeg in Resources */,
+				17BD19F52369E061004E7283 /* GAP_Exam_Rough_OlmoPotums_2DAE2.png in Resources */,
+				17BD19FF2369E061004E7283 /* helmetWavefront.obj in Resources */,
 				177AAA34232AA6E300D5B4A2 /* Main.storyboard in Resources */,
 				172FA2AE233BAB520049AD09 /* craneo.OBJ in Resources */,
+				1711C24E236A2DF9008AE65D /* scifiTank.obj in Resources */,
 				172FA2A9233BAB300049AD09 /* normal_flip_3.jpg in Resources */,
 				17C854AA234CB57300CCD7B5 /* Servoskull_mechanics_normal.jpg in Resources */,
+				1711C246236A2DF9008AE65D /* DefaultMaterial_metallic.jpeg in Resources */,
 				17C854B8234CB57300CCD7B5 /* servoSkull.obj in Resources */,
 				172FA2A5233BAB300049AD09 /* difuso_flip_oscuro.jpg in Resources */,
+				1711C248236A2DF9008AE65D /* DefaultMaterial_roughness.jpeg in Resources */,
+				1711C24A236A2DF9008AE65D /* DefaultMaterial_AO_0.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,18 +463,31 @@
 				17C854AD234CB57300CCD7B5 /* Servoskull_face_spec.jpg in Resources */,
 				17C854B3234CB57300CCD7B5 /* Servoskull_mechanics_spec.jpg in Resources */,
 				1793DC21233381F400128847 /* dragon.obj in Resources */,
+				1711C241236A2DF9008AE65D /* DefaultMaterial_albedo.jpeg in Resources */,
 				17C854A7234CB57300CCD7B5 /* Servoskull_face_gloss.jpg in Resources */,
+				1711C24B236A2DF9008AE65D /* DefaultMaterial_AO.jpeg in Resources */,
 				17F8ABDF2327C44B00F240D9 /* Assets.xcassets in Resources */,
+				17BD19F62369E061004E7283 /* GAP_Exam_BaseColor_OlmoPotums_2DAE2.png in Resources */,
+				17BD19FC2369E061004E7283 /* GAP_Exam_AO_OlmoPotums_2DAE2.png in Resources */,
+				17BD19F82369E061004E7283 /* GAP_Exam_Normal_OlmoPotums_2DAE2.png in Resources */,
 				17C854B1234CB57300CCD7B5 /* Servoskull_face_normal.jpg in Resources */,
+				17BD19FA2369E061004E7283 /* GAP_Exam_Metal_OlmoPotums_2DAE2.png in Resources */,
 				17C854AF234CB57300CCD7B5 /* Servoskull_mechanics_diff.jpg in Resources */,
 				17C854A5234CB57300CCD7B5 /* Servoskull_mechanics_gloss.jpg in Resources */,
 				172FA2A6233BAB300049AD09 /* difuso_flip_oscuro_5.jpg in Resources */,
+				1711C243236A2DF9008AE65D /* DefaultMaterial_normal.jpeg in Resources */,
+				17BD19F42369E061004E7283 /* GAP_Exam_Rough_OlmoPotums_2DAE2.png in Resources */,
+				17BD19FE2369E061004E7283 /* helmetWavefront.obj in Resources */,
 				17F8ABE22327C44B00F240D9 /* Main.storyboard in Resources */,
 				172FA2AD233BAB520049AD09 /* craneo.OBJ in Resources */,
+				1711C24D236A2DF9008AE65D /* scifiTank.obj in Resources */,
 				172FA2A8233BAB300049AD09 /* normal_flip_3.jpg in Resources */,
 				17C854A9234CB57300CCD7B5 /* Servoskull_mechanics_normal.jpg in Resources */,
+				1711C245236A2DF9008AE65D /* DefaultMaterial_metallic.jpeg in Resources */,
 				17C854B7234CB57300CCD7B5 /* servoSkull.obj in Resources */,
 				172FA2A4233BAB300049AD09 /* difuso_flip_oscuro.jpg in Resources */,
+				1711C247236A2DF9008AE65D /* DefaultMaterial_roughness.jpeg in Resources */,
+				1711C249236A2DF9008AE65D /* DefaultMaterial_AO_0.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
