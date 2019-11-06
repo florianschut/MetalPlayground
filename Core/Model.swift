@@ -66,5 +66,24 @@ class PGModel{
         try self.meshes.append(MTKMesh(mesh: cubeMesh, device: device))
     }
     
+    func buildSphere(diameter: Float, segments: Int, device: MTLDevice, mtlVertexDescriptor: MTLVertexDescriptor) throws{
+        let metalAllocator = MTKMeshBufferAllocator(device: device)
+        
+        let sphereMesh = MDLMesh.newEllipsoid(withRadii: simd_float3(diameter, diameter, diameter), radialSegments: segments, verticalSegments: segments, geometryType: .triangles, inwardNormals: false, hemisphere: false, allocator: metalAllocator)
+    
+        let mdlVertexDescriptor = MTKModelIOVertexDescriptorFromMetal(mtlVertexDescriptor)
+        
+        guard let attributes = mdlVertexDescriptor.attributes as? [MDLVertexAttribute] else{
+            print("Bad vertex descriptor when creating sphere")
+            throw RendererError.badVertexDescriptor
+        }
+        
+        attributes[VertexAttribute.position.rawValue].name = MDLVertexAttributePosition
+        attributes[VertexAttribute.texcoord.rawValue].name = MDLVertexAttributeTextureCoordinate
+        attributes[VertexAttribute.normal.rawValue].name = MDLVertexAttributeNormal
+        
+        sphereMesh.vertexDescriptor = mdlVertexDescriptor
+        try self.meshes.append(MTKMesh(mesh: sphereMesh, device: device))
+    }
     
 }

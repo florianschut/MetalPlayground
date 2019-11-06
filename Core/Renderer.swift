@@ -181,13 +181,13 @@ class Renderer: NSObject, MTKViewDelegate
         //viewTransform *= cameraRotation
         objectUniforms[0].modelMatrix = modelMatrix
         let lightRotationMatrix = matrix4x4_rotation(radians: lightRotation, axis: rotationAxis)
-        self.lights[0].position = lightRotationMatrix * vector_float4(0,0,2,1)
+        self.lights[0].position = lightRotationMatrix * vector_float4(0,0.5,2,1)
         let lightScaleMatrix = matrix_float4x4(diagonal: vector_float4(vector_float3(repeating:0.25), 1))
         objectUniforms[1].modelMatrix = matrix4x4_translation(self.lights[0].position.x, self.lights[0].position.y, self.lights[0].position.z) * lightScaleMatrix
         sharedUniforms[0].lights = self.lights[0]
             
         sharedUniforms[0].viewMatrix = simd_inverse(viewTransform)
-        lightRotation += 0.015
+        lightRotation += 0.025
         //self.rotation += 0.005
        // self.translation += vector_float3(0.00, 0.00, 0.00)
        
