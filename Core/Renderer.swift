@@ -30,6 +30,7 @@ class Renderer: NSObject, MTKViewDelegate
     var pipelineState: MTLRenderPipelineState
     var depthState: MTLDepthStencilState
     let mtlVertexDescriptor: MTLVertexDescriptor
+    var skybox: MTLTexture?;
     var pgModels: [PGModel] = []
     var lights: [Light] = [Light(position: vector_float4(-2.0, 1.0, 2.0, 1), color: vector_float4(1.0,1.0,1.0,1.0)),
                            Light(position: vector_float4(2.0, 1.0, 2.0, 1), color: vector_float4(0.0,1.0,0.0,1.0)) ]
@@ -246,7 +247,7 @@ class Renderer: NSObject, MTKViewDelegate
                                 renderEncoder.setVertexBuffer(buffer.buffer, offset: buffer.offset, index: index)
                             }
                         }
-                        for (n, submesh) in mesh.submeshes.enumerated() {
+                        for submesh in mesh.submeshes {
                             //TODO:: Add solid system for this
 //                            if n >= 10 {
 //                                renderEncoder.pushDebugGroup("AlbedoTexture 1")

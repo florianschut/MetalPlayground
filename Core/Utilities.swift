@@ -64,4 +64,14 @@ final class Utilities {
         ]
         return try textureLoader.newTexture(URL: url, options: textureLoaderOptions)
     }
+    
+    class func LoadTextureFromAssets(name: String!, device: MTLDevice) throws -> MTLTexture{
+        let textureLoader = MTKTextureLoader(device: device)
+        
+        let textureLoaderOptions = [
+            MTKTextureLoader.Option.textureUsage: NSNumber(value: MTLTextureUsage.shaderRead.rawValue),
+            MTKTextureLoader.Option.textureStorageMode: NSNumber(value: MTLStorageMode.private.rawValue)
+        ]
+        return try textureLoader.newTexture(name: name, scaleFactor: 1, bundle: nil, options: textureLoaderOptions)
+    }
 }
