@@ -119,18 +119,8 @@ fragment float4 fragmentShader(ColorInOut in [[stage_in]],
     float roughness = float(roughnessMap.sample(colorSampler, in.texCoord).x);
     float metallic = float(metallicMap.sample(colorSampler, in.texCoord).x);
     
-//    float3 halfWay = normalize(viewDir + lightDir);
-//    float NdotL = max(dot(normal, lightDir), 0.0f);
-//    float NdotV = max(dot(normal, viewDir), 0.0f);
-//    float NdotH = max(dot(normal, halfWay), 0.0f);
     float3 outCol = BRDF(lightDir, viewDir, normal, metallic, roughness, colorSample.xyz, float3(1,1,1));
     outCol += float3(0.03) * colorSample.xyz;
-//    float3 specularCol =  (float(glossMap.sample(colorSampler, in.texCoord).x) * sharedUniforms.lights.color.xyz) * pow(max(dot(normal, halfWay), 0.0), 32);
-//    float3 ambientCol = colorSample.xyz * 0.135;
-//    float3 diffuseCol = colorSample.xyz * max(dot(lightDir, normal), 0.0f);
-//    float3 outCol = diffuseCol + ambientCol + specularCol;
-//    
-//    outCol = outCol / (outCol + float3(1.f));
-//    outCol = pow(outCol, float3(1.0/2.2));
+    
     return float4(outCol, 1.0f);
 }

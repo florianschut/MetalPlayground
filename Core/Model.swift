@@ -41,11 +41,28 @@ class PGModel{
         }
     }
        
-    
-    func buildDebugCube(dimensions: vector_float3,device: MTLDevice, mtlVertexDescriptor: MTLVertexDescriptor) throws{
+    func buildSkyCube (device: MTLDevice, mtlVertexDescriptor: MTLVertexDescriptor) throws {
         let metalAllocator = MTKMeshBufferAllocator(device: device)
         
-        let cubeMesh = MDLMesh.newBox(withDimensions: dimensions, segments: vector_uint3(2,2,2), geometryType: .triangles, inwardNormals: false, allocator: metalAllocator)
+        let cubeMesh = MDLMesh.newBox(withDimensions: vector_float3(repeating: 1), segments: vector_uint3(repeating: 1), geometryType: .triangles, inwardNormals: false, allocator: metalAllocator)
+        
+        let mdlVertexDescriptor = MTKModelIOVertexDescriptorFromMetal(mtlVertexDescriptor)
+        guard let attributes = mdlVertexDescriptor.attributes as? [MDLVertexAttribute] else{
+            print("Bad vertex descriptor when creating debug box")
+            throw RendererError.badVertexDescriptor
+        }
+
+        attributes[VertexAttribute.position.rawValue].name = MDLVertexAttributePosition
+        
+        cubeMesh.vertexDescriptor = mdlVertexDescriptor
+        
+        try self.meshes.append(MTKMesh(mesh: cubeMesh, device: device))
+    }
+    
+    func buildDebugCube(dimensions: vector_float3, device: MTLDevice, mtlVertexDescriptor: MTLVertexDescriptor) throws{
+        let metalAllocator = MTKMeshBufferAllocator(device: device)
+        
+        let cubeMesh = MDLMesh.newBox(withDimensions: dimensions, segments: vector_uint3(repeating: 1), geometryType: .triangles, inwardNormals: false, allocator: metalAllocator)
         
         let mdlVertexDescriptor = MTKModelIOVertexDescriptorFromMetal(mtlVertexDescriptor)
         

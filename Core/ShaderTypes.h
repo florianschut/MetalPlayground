@@ -43,6 +43,7 @@ typedef NS_ENUM(NSInteger, TextureIndex)
     TextureIndexNormal      = 1,
     TextureIndexMetallic    = 2,
     TextureIndexRoughness   = 3,
+    TextureIndexSkybox      = 4,
 };
 
 typedef struct{

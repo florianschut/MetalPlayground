@@ -34,8 +34,14 @@ class LittlePlayground {
         //Load meshes and textures
         
         do{
-            try renderer.skybox = Utilities.LoadTextureFromAssets(name: "LuxoBox", device: metalKitView.device!)
-        } catch{
+            let skyboxModel = PGModel()
+            try skyboxModel.buildSkyCube(device: metalKitView.device!, mtlVertexDescriptor: renderer.mtlSkyboxVertexDescriptor)
+            
+            try skyboxModel.albedoTextures.append(Utilities.LoadTextureFromAssets(name: "LuxoMap", device: metalKitView.device!))
+            
+            self.renderer.skybox = skyboxModel
+            
+        } catch {
             print("Unable to load Luxo Jr. Skybox textures")
         }
         
