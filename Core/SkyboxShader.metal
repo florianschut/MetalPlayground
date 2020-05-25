@@ -30,6 +30,7 @@ vertex SkyboxInOut skyboxVertexShader (SkyboxVertex in [[stage_in]], constant Sh
     skyboxView.columns[3] = float4(0);
     
     out.UV = -in.position;
+    out.UV.x = -out.UV.x;
     out.position = uniforms.projectionMatrix * skyboxView * float4(in.position, 1.0f);
     out.position = out.position.xyww;
     return out;
