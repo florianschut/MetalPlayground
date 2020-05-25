@@ -56,7 +56,7 @@ float3 FresnelSchlick(float cosTetha, float metallic, float3 material_color)
     return F;
 }
 
-float3 BRDF(float3 L, float3 V, float3 N, float metallic, float roughness, float3 albedo, float3 radiance)
+float3 BRDF(float3 L, float3 V, float3 N, float metallic, float roughness, float3 albedo, float3 reflection, float3 radiance)
 {
     float3 H = normalize( V + L);
     float dotNV = max(dot(N, V), 0.0f);
@@ -71,7 +71,7 @@ float3 BRDF(float3 L, float3 V, float3 N, float metallic, float roughness, float
         float G = GeometrySchlickSmithGGX(dotNL, dotNV, roughness);
         float3 F = FresnelSchlick(dotNH, metallic, albedo);
         
-        float3 spec = (D * G * F) / (4.0 * dotNL * dotNV + 0.001f);
+        float3 spec = ((D * G * F) / (4.0 * dotNL * dotNV + 0.001f)) * reflection;
         float3 kD = (float3(1.f) - F) * (1.f - metallic);
         
         color += (kD * albedo / M_PI_F + spec) * radiance * dotNL;
@@ -102,7 +102,8 @@ fragment float4 fragmentShader(ColorInOut in [[stage_in]],
                                texture2d<half> colorMap [[texture(TextureIndexColor)]],
                                texture2d<half> normalMap [[texture(TextureIndexNormal)]],
                                texture2d<half> metallicMap [[texture(TextureIndexMetallic)]],
-                               texture2d<half> roughnessMap [[texture(TextureIndexRoughness)]])
+                               texture2d<half> roughnessMap [[texture(TextureIndexRoughness)]],
+                               texturecube<float> skybox_texture [[texture(TextureIndexSkybox)]])
 {
     constexpr sampler colorSampler(mip_filter::linear,
                                    mag_filter::linear,
@@ -118,9 +119,8 @@ fragment float4 fragmentShader(ColorInOut in [[stage_in]],
     float3 normal = normalize(float3(normalMap.sample(colorSampler, in.texCoord.xy).xyz) * tbn);
     float roughness = float(roughnessMap.sample(colorSampler, in.texCoord).x);
     float metallic = float(metallicMap.sample(colorSampler, in.texCoord).x);
-    
-    float3 outCol = BRDF(lightDir, viewDir, normal, metallic, roughness, colorSample.xyz, float3(1,1,1));
+    float3 reflection = skybox_texture.sample(colorSampler, reflect(viewDir, normal)).xyz;
+    float3 outCol = BRDF(lightDir, viewDir, normal, metallic, roughness, colorSample.xyz, reflection, float3(1,1,1));
     outCol += float3(0.03) * colorSample.xyz;
-    
     return float4(outCol, 1.0f);
 }
