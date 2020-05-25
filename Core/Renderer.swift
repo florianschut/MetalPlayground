@@ -271,6 +271,13 @@ class Renderer: NSObject, MTKViewDelegate
                 renderEncoder.setRenderPipelineState(pipelineState)
                 
                 renderEncoder.setDepthStencilState(depthState)
+                
+                if skybox != nil
+                {
+                    renderEncoder.setFragmentTexture(skybox!.albedoTextures[0], index: TextureIndex.skybox.rawValue)
+                } else {
+                    renderEncoder.setFragmentTexture(Utilities.GetWhiteTexture(device: self.device), index: TextureIndex.skybox.rawValue)
+                }
 
                 for (n,model) in self.pgModels.enumerated() {
                     //TODO: Add logic for multiple textures and no textures
@@ -307,11 +314,7 @@ class Renderer: NSObject, MTKViewDelegate
                     renderEncoder.setFrontFacing(.counterClockwise)
                     
                     renderEncoder.setRenderPipelineState(skyboxPipelineState)
-                    
-                    renderEncoder.setDepthStencilState(depthState)
-        
-                    renderEncoder.setFragmentTexture(skybox!.albedoTextures[0], index: TextureIndex.skybox.rawValue)
-                    
+            
                     let mesh = skybox!.meshes[0]
                     
                     for (index, element) in mesh.vertexDescriptor.layouts.enumerated(){
