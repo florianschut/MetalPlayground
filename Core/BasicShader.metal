@@ -90,10 +90,14 @@ vertex ColorInOut vertexShader
     float4 position = float4(in.position, 1.0);
     out.position = (sharedUniforms.projectionMatrix * sharedUniforms.viewMatrix * objectUniforms.modelMatrix) * position;
     out.fragWorldPos = objectUniforms.modelMatrix * position;
-    out.normal = normalize((objectUniforms.modelMatrix * float4(in.normal, 1.0f)).xyz);
+    float3x3 normal_mat(objectUniforms.modelMatrix[0].xyz,
+                               objectUniforms.modelMatrix[1].xyz,
+                               objectUniforms.modelMatrix[2].xyz
+                               );
     out.texCoord = float2(in.texCoord.x, -in.texCoord.y + 1);
-    out.tangent = in.tangent.xyz;
-    out.biTangent = cross(in.normal, in.tangent.xyz) * in.tangent.w;
+    out.normal = normalize(normal_mat * in.normal);
+    out.tangent = normalize(normal_mat * in.tangent.xyz);
+    out.biTangent = -normalize(normal_mat * cross(in.normal, in.tangent.xyz) * in.tangent.w);
     return out;
 }
 
@@ -109,14 +113,20 @@ fragment float4 fragmentShader(ColorInOut in [[stage_in]],
                                    mag_filter::linear,
                                    min_filter::linear);
     float4 colorSample = float4(colorMap.sample(colorSampler, in.texCoord.xy));
-    float3 lightDir = normalize(sharedUniforms.lights.position - in.fragWorldPos).xyz;
+    float3 lightDir = normalize(sharedUniforms.lights.position.xyz - in.fragWorldPos.xyz);
     float3 viewDir = normalize(((-sharedUniforms.viewMatrix[3]) - in.fragWorldPos).xyz);
-    float3x3 tbn = float3x3(in.tangent.x, in.biTangent.x, in.normal.x,
-                            in.tangent.y, in.biTangent.y, in.normal.y,
-                            in.tangent.z, in.biTangent.z, in.normal.z);
+//    float3x3 tbn = float3x3(in.tangent.x, in.biTangent.x, in.normal.x,
+//                            in.tangent.y, in.biTangent.y, in.normal.y,
+//                            in.tangent.z, in.biTangent.z, in.normal.z);
     
-    //Sample textures
-    float3 normal = normalize(float3(normalMap.sample(colorSampler, in.texCoord.xy).xyz) * tbn);
+    //Normals
+    half4 sampled_normal = normalMap.sample(colorSampler, in.texCoord.xy);
+    float3 tangent_normal = normalize((float4(sampled_normal).xyz * 2.0) - 1.0);
+    float3 normal = (tangent_normal.x * in.tangent +
+                    tangent_normal.y * in.biTangent +
+                    tangent_normal.z * in.normal);
+    
+    //float3 normal = normalize(float3(normalMap.sample(colorSampler, in.texCoord.xy).xyz) * tbn);
     float roughness = float(roughnessMap.sample(colorSampler, in.texCoord).x);
     float metallic = float(metallicMap.sample(colorSampler, in.texCoord).x);
     float3 reflection = skybox_texture.sample(colorSampler, reflect(viewDir, normal)).xyz;
